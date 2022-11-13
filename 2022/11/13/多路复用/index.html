@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="多路复用, 有一撮头发">
+    <meta name="keywords" content="IO多路复用, 有一撮头发">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>多路复用 | 有一撮头发</title>
+    <title>IO多路复用 | 有一撮头发</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/16.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/10.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">多路复用</h1>
+                    <h1 class="description center-align post-title">IO多路复用</h1>
                 </div>
             </div>
         </div>
@@ -429,9 +429,17 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/">
+                                <span class="chip bg-color">IO多路复用</span>
+                            </a>
+                        
+                            <a href="/tags/Reactor/">
+                                <span class="chip bg-color">Reactor</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
@@ -464,7 +472,8 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h1><h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>高性能是每个程序员的追求，无论写一行代码还是做一个系统，都希望能够达到高性能的效果。高性能架构设计主要集中在两个方面：</p>
+                <p>高性能是每个程序员的追求，无论写一行代码还是做一个系统，都希望能够达到高性能的效果。<a id="more"></a></p>
+<h1 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h1><h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>高性能是每个程序员的追求，无论写一行代码还是做一个系统，都希望能够达到高性能的效果。高性能架构设计主要集中在两个方面：</p>
 <ul>
 <li>尽量提升单服务器的性能，将单服务器的性能发挥到极致</li>
 <li>如果单服务器无法支撑性能，设计服务器集群方案</li>
@@ -489,19 +498,22 @@
 <p><strong>阻塞与非阻塞：</strong></p>
 <p>阻塞与非阻塞的概念描述的是<strong>用户线程调用内核IO操作的方式</strong>，阻塞是<strong>指IO操作需要彻底完成后才能返回用户空间</strong>，非阻塞时指IO操作被调用后立即返回给用户一个状态值，<strong>无需等待IO操作彻底完成</strong>。</p>
 </blockquote>
-<h3 id="同步阻塞IO"><a href="#同步阻塞IO" class="headerlink" title="同步阻塞IO"></a>同步阻塞IO</h3><p>同步阻塞IO是最简单的IO模型，用户线程在内核进行IO操作时被阻塞。用户线程通过调用系统调用read发起IO读操作，由用户空间转到内核空间。内核等到数据包到达后，然后将接受的数据拷贝到用户空间，完成read操作。整个IO请求过程，用户线程都是被阻塞的，对CPU利用率不够充分<img src="http://images.cnitblog.com/blog/405877/201411/142330286789443.png" alt="img"></p>
+<h3 id="同步阻塞IO"><a href="#同步阻塞IO" class="headerlink" title="同步阻塞IO"></a>同步阻塞IO</h3><p>同步阻塞IO是最简单的IO模型，用户线程在内核进行IO操作时被阻塞。用户线程通过调用系统调用read发起IO读操作，由用户空间转到内核空间。内核等到数据包到达后，然后将接受的数据拷贝到用户空间，完成read操作。整个IO请求过程，用户线程都是被阻塞的，对CPU利用率不够充分</p>
+<p><img src="/../images/%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/%E5%90%8C%E6%AD%A5%E9%98%BB%E5%A1%9E.png" alt="同步阻塞"></p>
 <h3 id="同步非阻塞IO"><a href="#同步非阻塞IO" class="headerlink" title="同步非阻塞IO"></a>同步非阻塞IO</h3><p>在同步基础上，将socket设置为NONBLOCK，这样用户线程可以在发起IO请求后立即返回。虽说可以立即返回，但并未读到任何数据，用户线程需要不断的发起IO请求，直到数据到达后才能真正读到数据，然后去处理。</p>
-<p>整个IO请求中，虽然可以立即返回，但是因为是同步的，为了等到数据，需要不断的轮询、重复请求，消耗了大量的CPU资源。因此，这种模型很少使用，实际用处不大。<img src="http://images.cnitblog.com/blog/405877/201411/142332004602984.png" alt="img"></p>
+<p>整个IO请求中，虽然可以立即返回，但是因为是同步的，为了等到数据，需要不断的轮询、重复请求，消耗了大量的CPU资源。因此，这种模型很少使用，实际用处不大。</p>
+<p><img src="/../images/%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/%E5%90%8C%E6%AD%A5%E9%9D%9E%E9%98%BB%E5%A1%9E.png" alt="同步非阻塞"></p>
 <h3 id="IO多路复用-1"><a href="#IO多路复用-1" class="headerlink" title="IO多路复用"></a>IO多路复用</h3><p><strong>IO多路复用设计目的其实不是为了快，而是为了解决线程&#x2F;进程数量过多对服务器开销造成的压力。</strong></p>
 <p>通过Reactor方式，用户线程轮询IO操作状态的工作统一交给handle_events事件循环处理。用户线程注册事件处理器之后可以继续执行做其他的工作（异步），而Reactor线程负责调用内核的select函数检查socket状态。当有socket被激活时，则通知相应的用户线程（或执行用户线程的回调函数），执行handel_envent进行数据的读取、处理工作。</p>
 <p>由于select函数是阻塞的，因此<strong>多路IO复用模型就被称为异步阻塞IO模型</strong>，这里阻塞不是指socket，阻塞的是select系统调用返回。因为使用IO多路复用时，socket都设置NONBLOCK，不过不影响，因为用户发起IO请求时，数据已经到达了，用户线程一定不会被阻塞。</p>
-<p>IO多路复用是最常用的IO模型，但其异步程度还不彻底，因为它使用了回阻塞线程的select系统调用。因此IO多路复用只能称为异步阻塞IO，而非真正的异步IO。<img src="http://images.cnitblog.com/blog/405877/201411/142333254136604.png" alt="img"></p>
+<p>IO多路复用是最常用的IO模型，但其异步程度还不彻底，因为它使用了回阻塞线程的select系统调用。因此IO多路复用只能称为异步阻塞IO，而非真正的异步IO。</p>
+<p><img src="/../images/%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8.png" alt="多路复用"></p>
 <h3 id="异步非阻塞IO"><a href="#异步非阻塞IO" class="headerlink" title="异步非阻塞IO"></a>异步非阻塞IO</h3><p> 在IO多路复用模型中，事件循环文件句柄的状态事件通知给用户线程，由用户线程自行读取数据、处理数据。而异步IO中，当用户线程收到通知时候，<strong>数据已经被内核读取完毕</strong>，并放在了用户线程指定的缓冲区内，<strong>内核在IO完成后通知用户线程直接使用就行了</strong>。因此这种模型需要操作系统更强的支持，把read操作从用户线程转移到了内核。</p>
 <h2 id="三、select、poll、epoll详解"><a href="#三、select、poll、epoll详解" class="headerlink" title="三、select、poll、epoll详解"></a>三、select、poll、epoll详解</h2><p>select，poll，epoll都是IO多路复用的机制。<strong>I&#x2F;O多路复用就是通过一种机制，一个进程可以监视多个描述符（socket</strong>），一旦某个描述符就绪（一般是读就绪或者写就绪），能够通知程序进行相应的读写操作。虽说IO多路复用被称为<strong>异步阻塞IO，但select，poll，epoll本质上都是同步IO</strong>，<strong>因为它们都需要在续写事件就绪后自己负责进行读写</strong>，也就是说这个读写过程是<strong>阻塞</strong>的，而真正意义上的异步IO无需自己负责进行读写。</p>
 <h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><pre class=" language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">select</span> <span class="token punctuation">(</span><span class="token keyword">int</span> n<span class="token punctuation">,</span> fd_set <span class="token operator">*</span>readfds<span class="token punctuation">,</span> fd_set <span class="token operator">*</span>writefds<span class="token punctuation">,</span> fd_set <span class="token operator">*</span>exceptfds<span class="token punctuation">,</span> <span class="token keyword">struct</span> timeval <span class="token operator">*</span>timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
 <p>select 函数监视的文件描述符分3类，分别是writefds、readfds、和exceptfds。<strong>调用后select函数会阻塞</strong>，直到有描述符就绪（有数据 可读、可写、或者有except），或者超时（timeout指定等待时间，如果立即返回设为null即可），函数返回。当select函数返回后，<strong>可以通过遍历fdset，来找到就绪的描述符。</strong></p>
-<p><img src="C:\Users\CharlesKinx\AppData\Roaming\Typora\typora-user-images\image-20221113200621514.png" alt="image-20221113200621514"></p>
+<p><img src="/../images/%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/Snipaste_2022-11-13_21-57-44.png"></p>
 <h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><pre class=" language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">poll</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> pollfd <span class="token operator">*</span>fds<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> nfds<span class="token punctuation">,</span> <span class="token keyword">int</span> timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
 <p>不同与select使用三个位图来表示三个fdset的方式，poll使用一个 pollfd的指针实现。</p>
@@ -583,7 +595,15 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
+                            
+                                <a href="/tags/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/">
+                                    <span class="chip bg-color">IO多路复用</span>
+                                </a>
+                            
+                                <a href="/tags/Reactor/">
+                                    <span class="chip bg-color">Reactor</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -634,15 +654,15 @@
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="多路复用">
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="IO多路复用">
                         
-                        <span class="card-title">多路复用</span>
+                        <span class="card-title">IO多路复用</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
+                            高性能是每个程序员的追求，无论写一行代码还是做一个系统，都希望能够达到高性能的效果。
                         
                     </div>
                     <div class="publish-info">
@@ -659,33 +679,45 @@
                 </div>
 
                 
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/">
+                        <span class="chip bg-color">IO多路复用</span>
+                    </a>
+                    
+                    <a href="/tags/Reactor/">
+                        <span class="chip bg-color">Reactor</span>
+                    </a>
+                    
+                </div>
+                
             </div>
         </div>
         
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+                本篇&nbsp;<i class="far fa-dot-circle"></i>
             </div>
             <div class="card">
-                <a href="/2022/09/08/hello-world/">
+                <a href="/2022/11/13/%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="IO多路复用">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title">IO多路复用</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
+                            高性能是每个程序员的追求，无论写一行代码还是做一个系统，都希望能够达到高性能的效果。
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-09-08
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-11-13
                             </span>
                         <span class="publish-author">
                             
@@ -694,6 +726,19 @@
                             
                         </span>
                     </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/">
+                        <span class="chip bg-color">IO多路复用</span>
+                    </a>
+                    
+                    <a href="/tags/Reactor/">
+                        <span class="chip bg-color">Reactor</span>
+                    </a>
+                    
                 </div>
                 
             </div>
