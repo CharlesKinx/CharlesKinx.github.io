@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="有一撮头发">
+    <meta name="keywords" content="多路复用, 有一撮头发">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>有一撮头发</title>
+    <title>多路复用 | 有一撮头发</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -29,7 +29,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 6.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
 
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/16.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title"></h1>
+                    <h1 class="description center-align post-title">多路复用</h1>
                 </div>
             </div>
         </div>
@@ -498,15 +498,19 @@
 <p>IO多路复用是最常用的IO模型，但其异步程度还不彻底，因为它使用了回阻塞线程的select系统调用。因此IO多路复用只能称为异步阻塞IO，而非真正的异步IO。<img src="http://images.cnitblog.com/blog/405877/201411/142333254136604.png" alt="img"></p>
 <h3 id="异步非阻塞IO"><a href="#异步非阻塞IO" class="headerlink" title="异步非阻塞IO"></a>异步非阻塞IO</h3><p> 在IO多路复用模型中，事件循环文件句柄的状态事件通知给用户线程，由用户线程自行读取数据、处理数据。而异步IO中，当用户线程收到通知时候，<strong>数据已经被内核读取完毕</strong>，并放在了用户线程指定的缓冲区内，<strong>内核在IO完成后通知用户线程直接使用就行了</strong>。因此这种模型需要操作系统更强的支持，把read操作从用户线程转移到了内核。</p>
 <h2 id="select、poll、epoll详解"><a href="#select、poll、epoll详解" class="headerlink" title="select、poll、epoll详解"></a>select、poll、epoll详解</h2><p>select，poll，epoll都是IO多路复用的机制。<strong>I&#x2F;O多路复用就是通过一种机制，一个进程可以监视多个描述符（socket</strong>），一旦某个描述符就绪（一般是读就绪或者写就绪），能够通知程序进行相应的读写操作。虽说IO多路复用被称为<strong>异步阻塞IO，但select，poll，epoll本质上都是同步IO</strong>，<strong>因为它们都需要在续写事件就绪后自己负责进行读写</strong>，也就是说这个读写过程是<strong>阻塞</strong>的，而真正意义上的异步IO无需自己负责进行读写。</p>
-<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">select</span> <span class="params">(<span class="type">int</span> n, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, <span class="keyword">struct</span> timeval *timeout)</span>;</span><br></pre></td></tr></table></figure>
-
+<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><pre class=" language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">select</span> <span class="token punctuation">(</span><span class="token keyword">int</span> n<span class="token punctuation">,</span> fd_set <span class="token operator">*</span>readfds<span class="token punctuation">,</span> fd_set <span class="token operator">*</span>writefds<span class="token punctuation">,</span> fd_set <span class="token operator">*</span>exceptfds<span class="token punctuation">,</span> <span class="token keyword">struct</span> timeval <span class="token operator">*</span>timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <p>select 函数监视的文件描述符分3类，分别是writefds、readfds、和exceptfds。<strong>调用后select函数会阻塞</strong>，直到有描述符就绪（有数据 可读、可写、或者有except），或者超时（timeout指定等待时间，如果立即返回设为null即可），函数返回。当select函数返回后，<strong>可以通过遍历fdset，来找到就绪的描述符。</strong></p>
 <p><img src="C:\Users\CharlesKinx\AppData\Roaming\Typora\typora-user-images\image-20221113200621514.png" alt="image-20221113200621514"></p>
-<h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">poll</span> <span class="params">(<span class="keyword">struct</span> pollfd *fds, <span class="type">unsigned</span> <span class="type">int</span> nfds, <span class="type">int</span> timeout)</span>;</span><br></pre></td></tr></table></figure>
-
+<h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><pre class=" language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">poll</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> pollfd <span class="token operator">*</span>fds<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> nfds<span class="token punctuation">,</span> <span class="token keyword">int</span> timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <p>不同与select使用三个位图来表示三个fdset的方式，poll使用一个 pollfd的指针实现。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">pollfd</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> fd; <span class="comment">/* file descriptor */</span></span><br><span class="line">    <span class="type">short</span> events; <span class="comment">/* requested events to watch */</span></span><br><span class="line">    <span class="type">short</span> revents; <span class="comment">/* returned events witnessed */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
+<pre class=" language-c"><code class="language-c"><span class="token keyword">struct</span> pollfd <span class="token punctuation">{</span>
+    <span class="token keyword">int</span> fd<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">/* file descriptor */</span>
+    <span class="token keyword">short</span> events<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">/* requested events to watch */</span>
+    <span class="token keyword">short</span> revents<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">/* returned events witnessed */</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
 <p>pollfd结构包含了<strong>要监视的event和发生的event</strong>，不再使用select“参数-值”传递的方式。同时，pollfd并没有最大数量限制（但是数量过大后性能也是会下降）。 和select函数一样，poll返回后，<strong>需要轮询pollfd</strong>来获取就绪的描述符。</p>
 <blockquote>
 <p>从上面看，select和poll都需要在返回后，**<code>通过遍历文件描述符来获取已经就绪的socket</code>**。事实上，同时连接的大量客户端在一时刻可能只有很少的处于就绪状态，因此随着监视的描述符数量的增长，其效率也会线性下降。</p>
@@ -630,9 +634,9 @@
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="">
+                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="多路复用">
                         
-                        <span class="card-title"></span>
+                        <span class="card-title">多路复用</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
